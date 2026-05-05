@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Forca</title>
+
+<style>
+body{
+    font-family: Arial;
+    text-align: center;
+    background: linear-gradient(135deg,#1e1e1e,#333);
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+h1{
+    font-size: 40px;
+}
+
+#palavra{
+    font-size: 35px;
+    letter-spacing: 10px;
+    margin: 20px;
+}
+
+#letras button{
+    margin: 5px;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: #00aaff;
+    color: white;
+}
+
+#letras button:disabled{
+    background: gray;
+}
+
+#mensagem{
+    margin-top: 20px;
+    font-size: 25px;
+}
+
+#reiniciar{
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#reiniciar:hover{
+    background: darkgreen;
+}
+</style>
+</head>
+<body>
+
+<h1>🎮 Jogo da Forca</h1>
+
+<p id="palavra"></p>
+<p>Erros: <span id="erros">0</span>/6</p>
+
+<div id="letras"></div>
+
+<div id="mensagem"></div>
+
+<button id="reiniciar" onclick="reiniciarJogo()">Jogar Novamente</button>
+
+<script>
+const palavras = [
+    "HTML",
+    "JAVASCRIPT",
+    "CSS",
+    "PROGRAMACAO",
+    "COMPUTADOR",
+    "INTERNET",
+    "GITHUB"
+];
+
+let palavraSecreta = palavras[Math.floor(Math.random() * palavras.length)];
+let palavraOculta = Array(palavraSecreta.length).fill("_");
+let erros = 0;
+
+const palavraEl = document.getElementById("palavra");
+const errosEl = document.getElementById("erros");
+const letrasEl = document.getElementById("letras");
+const mensagemEl = document.getElementById("mensagem");
+
+function mostrarPalavra(){
+    palavraEl.textContent = palavraOculta.join(" ");
+}
+
+function criarBotoes(){
+    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    letrasEl.innerHTML = "";
+
+    for(let letra of alfabeto){
+        const botao = document.createElement("button");
+        botao.textContent = letra;
+
+        botao.onclick = function(){
+            botao.disabled = true;
+
+            if(palavraSecreta.includes(letra)){
+                for(let i = 0; i < palavraSecreta.length; i++){
+                    if(palavraSecreta[i] === letra){
+                        palavraOculta[i] = letra;
+                    }
+                }
+            } else {
+                erros++;
+                errosEl.textContent = erros;
+            }
+
+            mostrarPalavra();
+            verificarFim();
+        }
+
+        letrasEl.appendChild(botao);
+    }
+}
+
+function verificarFim(){
+    if(!palavraOculta.includes("_")){
+        mensagemEl.innerHTML = `
+            <h2 style="color:lime;">🎉 VOCÊ VENCEU!</h2>
+        `;
+        desativarBotoes();
+    }
+
+    if(erros >= 6){
+        mensagemEl.innerHTML = `
+            <h2 style="color:red;">💀 GAME OVER</h2>
+            <p>A palavra era: <strong>${palavraSecreta}</strong></p>
+        `;
+        desativarBotoes();
+    }
+}
+
+function desativarBotoes(){
+    const botoes = document.querySelectorAll("#letras button");
+    botoes.forEach(botao => botao.disabled = true);
+}
+
+function reiniciarJogo(){
+    location.reload();
+}
+
+mostrarPalavra();
+criarBotoes();
+</script>
+
+</body>
+</html>
