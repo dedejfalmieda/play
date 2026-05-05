@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo de Matemática</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            background: #f4f4f4;
+        }
+        h1 {
+            color: blue;
+        }
+        button {
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Jogo de Matemática</h1>
+    <h2 id="pergunta"></h2>
+
+    <input type="number" id="resposta" placeholder="Digite a resposta">
+    <br>
+    <button onclick="verificar()">Responder</button>
+
+    <h3 id="resultado"></h3>
+    <h3>Pontos: <span id="pontos">0</span></h3>
+
+    <script>
+        let num1, num2, respostaCorreta;
+        let pontos = 0;
+
+        function novaPergunta() {
+            num1 = Math.floor(Math.random() * 10) + 1;
+            num2 = Math.floor(Math.random() * 10) + 1;
+            respostaCorreta = num1 + num2;
+
+            document.getElementById("pergunta").innerHTML =
+                `${num1} + ${num2} = ?`;
+        }
+
+        function verificar() {
+            let respostaUsuario =
+                Number(document.getElementById("resposta").value);
+
+            if (respostaUsuario === respostaCorreta) {
+                document.getElementById("resultado").innerHTML =
+                    "✅ Acertou!";
+                pontos++;
+            } else {
+                document.getElementById("resultado").innerHTML =
+                    "❌ Errou!";
+            }
+
+            document.getElementById("pontos").innerHTML = pontos;
+            document.getElementById("resposta").value = "";
+            novaPergunta();
+        }
+
+        novaPergunta();
+    </script>
+
+</body>
+</html>
